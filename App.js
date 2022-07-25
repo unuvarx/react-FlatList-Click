@@ -1,202 +1,176 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
-  FlatList,
-  Image,
-  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
   View,
-  Alert,
-  RefreshControl,
   Text,
+  Image,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 
-const dataThumbnail = [
-  {
-    albumId: 1,
-    id: 1,
-    title: 'accusamus beatae ad facilis cum similique qui sunt',
-    url: 'https://via.placeholder.com/600/92c952',
-    thumbnailUrl: 'https://via.placeholder.com/150/92c952',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
   },
-  {
-    albumId: 1,
-    id: 2,
-    title: 'reprehenderit est deserunt velit ipsam',
-    url: 'https://via.placeholder.com/600/771796',
-    thumbnailUrl: 'https://via.placeholder.com/150/771796',
+  wrapButton: {
+    alignItems: 'center',
+    marginHorizontal: 50,
+    padding: 20,
+    backgroundColor: 'orange',
   },
-  {
-    albumId: 1,
-    id: 3,
-    title: 'officia porro iure quia iusto qui ipsa ut modi',
-    url: 'https://via.placeholder.com/600/24f355',
-    thumbnailUrl: 'https://via.placeholder.com/150/24f355',
+  textFontSize: {
+    fontSize: 20,
+    textAlign: 'center',
+    backgroundColor: 'black',
+    color: '#fff',
+
   },
-  {
-    albumId: 1,
-    id: 4,
-    title: 'culpa odio esse rerum omnis laboriosam voluptate repudiandae',
-    url: 'https://via.placeholder.com/600/d32776',
-    thumbnailUrl: 'https://via.placeholder.com/150/d32776',
+  item: {
+    borderWidth: 2,
+    padding: 8,
+    borderRadius: 10,
+    justifyContent: 'center',
   },
-  {
-    albumId: 1,
-    id: 5,
-    title: 'natus nisi omnis corporis facere molestiae rerum in',
-    url: 'https://via.placeholder.com/600/f66b97',
-    thumbnailUrl: 'https://via.placeholder.com/150/f66b97',
+  thumbnail: {
+    width: 100,
+    height: 100,
   },
-  {
-    albumId: 1,
-    id: 6,
-    title: 'accusamus ea aliquid et amet sequi nemo',
-    url: 'https://via.placeholder.com/600/56a8c2',
-    thumbnailUrl: 'https://via.placeholder.com/150/56a8c2',
-  },
-  {
-    albumId: 1,
-    id: 7,
-    title: 'officia delectus consequatur vero aut veniam explicabo molestias',
-    url: 'https://via.placeholder.com/600/b0f7cc',
-    thumbnailUrl: 'https://via.placeholder.com/150/b0f7cc',
-  },
-  {
-    albumId: 1,
-    id: 8,
-    title: 'aut porro officiis laborum odit ea laudantium corporis',
-    url: 'https://via.placeholder.com/600/54176f',
-    thumbnailUrl: 'https://via.placeholder.com/150/54176f',
-  },
-  {
-    albumId: 1,
-    id: 9,
-    title: 'qui eius qui autem sed',
-    url: 'https://via.placeholder.com/600/51aa97',
-    thumbnailUrl: 'https://via.placeholder.com/150/51aa97',
-  },
-  {
-    albumId: 1,
-    id: 10,
-    title: 'beatae et provident et ut vel',
-    url: 'https://via.placeholder.com/600/810b14',
-    thumbnailUrl: 'https://via.placeholder.com/150/810b14',
-  },
-  {
-    albumId: 1,
-    id: 11,
-    title: 'nihil at amet non hic quia qui',
-    url: 'https://via.placeholder.com/600/1ee8a4',
-    thumbnailUrl: 'https://via.placeholder.com/150/1ee8a4',
-  },
-  {
-    albumId: 1,
-    id: 12,
-    title:
-      'mollitia soluta ut rerum eos aliquam consequatur perspiciatis maiores',
-    url: 'https://via.placeholder.com/600/66b7d2',
-    thumbnailUrl: 'https://via.placeholder.com/150/66b7d2',
-  },
-  {
-    albumId: 1,
-    id: 13,
-    title: 'repudiandae iusto deleniti rerum',
-    url: 'https://via.placeholder.com/600/197d29',
-    thumbnailUrl: 'https://via.placeholder.com/150/197d29',
-  },
-  {
-    albumId: 1,
-    id: 14,
-    title: 'est necessitatibus architecto ut laborum',
-    url: 'https://via.placeholder.com/600/61a65',
-    thumbnailUrl: 'https://via.placeholder.com/150/61a65',
-  },
-  {
-    albumId: 1,
-    id: 15,
-    title: 'harum dicta similique quis dolore earum ex qui',
-    url: 'https://via.placeholder.com/600/f9cee5',
-    thumbnailUrl: 'https://via.placeholder.com/150/f9cee5',
-  },
-  {
-    albumId: 1,
-    id: 16,
-    title: 'iusto sunt nobis quasi veritatis quas expedita voluptatum deserunt',
-    url: 'https://via.placeholder.com/600/fdf73e',
-    thumbnailUrl: 'https://via.placeholder.com/150/fdf73e',
-  },
-  {
-    albumId: 1,
-    id: 17,
-    title: 'natus doloribus necessitatibus ipsa',
-    url: 'https://via.placeholder.com/600/9c184f',
-    thumbnailUrl: 'https://via.placeholder.com/150/9c184f',
-  },
-  {
-    albumId: 1,
-    id: 18,
-    title: 'laboriosam odit nam necessitatibus et illum dolores reiciendis',
-    url: 'https://via.placeholder.com/600/1fe46f',
-    thumbnailUrl: 'https://via.placeholder.com/150/1fe46f',
-  },
-  {
-    albumId: 1,
-    id: 19,
-    title: 'perferendis nesciunt eveniet et optio a',
-    url: 'https://via.placeholder.com/600/56acb2',
-    thumbnailUrl: 'https://via.placeholder.com/150/56acb2',
-  },
-  {
-    albumId: 1,
-    id: 20,
-    title:
-      'assumenda voluptatem laboriosam enim consequatur veniam placeat reiciendis error',
-    url: 'https://via.placeholder.com/600/8985dc',
-    thumbnailUrl: 'https://via.placeholder.com/150/8985dc',
-  },
-];
+  cardText: {
+    flex: 1,
+  }
+});
+
 const App = () => {
-  const [refreshing, setRefresh] = useState(false);
-  const _onRefresh = () => {
-    setRefresh(true);
-    setTimeout(() => {
-      setRefresh(false);
-    }, 2000);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getListPhotos();
+    return () => {};
+  }, []);
+
+  getListPhotos = () => {
+    const apiURL =
+      'https://jsonplaceholder.typicode.com/photos?_limit=20&page=1';
+    fetch(apiURL)
+      .then(res => res.json())
+      .then(resJson => {
+        setData(resJson);
+      })
+      .catch(error => {
+        console.log('Error: ', error);
+      })
+      .finally(() => setIsLoading(false));
+    const bringData = data.map(i => {
+      return {
+        ...i,
+        selected: 1,
+      };
+    });
+    setData(bringData);
+  };
+  onClickItem = (item, index) => {
+    const newArrData = data.map(e => {
+      if (item.id == e.id && item.selected == 0.2) {
+        return {
+          ...e,
+          selected: 1,
+        };
+      } else if (item.id == e.id) {
+        return {
+          ...e,
+          selected: 0.2,
+        };
+      }
+
+      return {
+        ...e,
+      };
+    });
+    setData(newArrData);
+  };
+
+  RenderItem = ({item, index}) => {
+    if (item.id % 2 == 0) {
+      return (
+        <TouchableOpacity
+          onPress={() => onClickItem(item, index)}
+          style={[
+            styles.item,
+            {
+              marginTop: 11,
+              height: 150,
+              opacity: item.selected,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}>
+          <Image
+            style={styles.thumbnail}
+            source={{uri: item.thumbnailUrl, width: 100, height: 100}}
+            resizeMode="contain"
+          />
+          <Text style={styles.cardText} >{item.title}</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={() => onClickItem(item, index)}
+          style={[
+            styles.item,
+            {
+              marginTop: 11,
+              height: 150,
+              opacity: item.selected,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}>
+          <Text style={styles.cardText} >{item.title}</Text>
+          <Image
+            style={styles.thumbnail}
+            source={{uri: item.thumbnailUrl, width: 100, height: 100}}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      );
+    }
+  };
+  const selecteds = [];
+  showInfo = () => {
+    let titles = '';
+    data.map(x => {
+      if (x.selected == 0.2) {
+        selecteds.push(x.title);
+        titles = titles + '--' + x.title;
+      }
+      alert(titles);
+    });
   };
   return (
-    <SafeAreaView>
-      <FlatList
-        data={dataThumbnail}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() =>
-              Alert.alert(item.title, String(item.albumId), [{text: 'Exit'}])
-            }>
-            <View
-              style={{
-                width: 300,
-                height: 'auto',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                marginTop: 10,
-                borderWidth: 2,
-                borderRadius: 10,
-              }}>
-              <Image
-                source={{uri: item.thumbnailUrl, width: '100%', height: 100}}
-                style={{borderTopLeftRadius: 7, borderTopRightRadius: 7}}
-              />
-              <Text>{item.title}</Text>
-              <Text style={{fontWeight: 'bold'}}>{item.id}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => item.id}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
-        }
-      />
+    <SafeAreaView style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={RenderItem}
+          keyExtractor={item => item.id}
+        />
+      )}
+
+      <TouchableOpacity onPress={()=> showInfo()}>
+        <Text style={styles.textFontSize}>INFO</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
+
 export default App;
